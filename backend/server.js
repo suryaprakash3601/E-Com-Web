@@ -47,12 +47,26 @@ const allowedOrigins = [
   'http://localhost:3000',
 ];
 if (process.env.CLIENT_URL) {
-  allowedOrigins.push(process.env.CLIENT_URL);
+  const cleanClientUrl = process.env.CLIENT_URL.trim().replace(/\/$/, "");
+  allowedOrigins.push(cleanClientUrl);
 }
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin) return callback(null, true);
+      
+      const cleanOrigin = origin.trim().replace(/\/$/, "");
+      
+      // Allow if it matches allowedOrigins or is a Vercel deployment
+      if (allowedOrigins.includes(cleanOrigin) || cleanOrigin.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+      
+      console.log(`⚠️ Blocked by CORS: Origin '${origin}' is not allowed.`);
+      return callback(null, false);
+    },
     credentials: true,
   })
 );
