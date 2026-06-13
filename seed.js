@@ -1,0 +1,184 @@
+const mongoose = require('mongoose');
+const https = require('https');
+require('dotenv').config();
+
+const User = require('./models/user');
+const Category = require('./models/category');
+const Product = require('./models/product');
+
+// Helper to download an image as a Buffer
+const downloadImage = (url) => {
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      if (res.statusCode !== 200) {
+        return reject(new Error(`Failed to get '${url}' (${res.statusCode})`));
+      }
+      const data = [];
+      res.on('data', (chunk) => data.push(chunk));
+      res.on('end', () => resolve(Buffer.concat(data)));
+    }).on('error', reject);
+  });
+};
+
+const seedDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('MongoDB Connected for Seeding');
+
+    // Clear existing data to prevent duplicates during multiple runs
+    await User.deleteMany({});
+    await Category.deleteMany({});
+    await Product.deleteMany({});
+    console.log('Cleared existing data.');
+
+    // 1. Create Admin User
+    const adminUser = new User({
+      name: 'Admin User',
+      email: 'admin@example.com',
+      password: 'password123',
+      role: 1 
+    });
+    await adminUser.save();
+    console.log('Admin user created: admin@example.com / password123');
+    
+    // 2. Create Regular User
+    const regUser = new User({
+      name: 'Regular User',
+      email: 'user@example.com',
+      password: 'password123',
+      role: 0 
+    });
+    await regUser.save();
+    console.log('Regular user created: user@example.com / password123');
+
+    // 3. Create Categories
+    const catElectronics = new Category({ name: 'Electronics' });
+    const catBooks = new Category({ name: 'Books' });
+    const catClothing = new Category({ name: 'Clothing' });
+    const catHome = new Category({ name: 'Home & Kitchen' });
+    
+    await catElectronics.save();
+    await catBooks.save();
+    await catClothing.save();
+    await catHome.save();
+    console.log('Categories created.');
+
+    // 4. Define Products with Real Object Image URLs
+    const productData = [
+      {
+        name: 'MacBook Pro M2 14-inch',
+        description: 'Apple M2 Pro chip with 10‑core CPU and 16‑core GPU, 16GB Memory, 512GB SSD Storage',
+        price: 1999,
+        category: catElectronics._id,
+        quantity: 10,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Sony WH-1000XM5 Headphones',
+        description: 'Industry leading noise canceling headphones. Enjoy uncompromised sound quality.',
+        price: 398,
+        category: catElectronics._id,
+        quantity: 50,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Mechanical Gaming Keyboard',
+        description: 'RGB Back-lit, Clicky Blue Switches, Aluminum Frame, Detachable USB-C',
+        price: 89,
+        category: catElectronics._id,
+        quantity: 120,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Clean Code: A Handbook',
+        description: 'Even bad code can function. But if code is not clean, it can bring a development organization to its knees.',
+        price: 45,
+        category: catBooks._id,
+        quantity: 100,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Design Patterns',
+        description: 'Elements of Reusable Object-Oriented Software. The definitive guide.',
+        price: 55,
+        category: catBooks._id,
+        quantity: 30,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1589998059171-988d887df646?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Premium Cotton T-Shirt',
+        description: 'Incredibly soft 100% organic cotton crew neck t-shirt. Breathable and perfect for an everyday fit.',
+        price: 25,
+        category: catClothing._id,
+        quantity: 200,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Classic Vintage Denim Jacket',
+        description: 'Timeless light wash denim jacket with a relaxed fit and durable construction.',
+        price: 75,
+        category: catClothing._id,
+        quantity: 45,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1576871337622-98d48d1cf531?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Ceramic Pour Over Coffee Maker',
+        description: 'V60 style ceramic pour over brewer. Experience a rich, flavorful cup of coffee every morning.',
+        price: 22,
+        category: catHome._id,
+        quantity: 150,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Minimalist Wall Clock',
+        description: 'Silent non-ticking minimalist wall clock, perfect for modern home or office decor.',
+        price: 34,
+        category: catHome._id,
+        quantity: 60,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1506506200949-0e2ff1018330?auto=format&fit=crop&w=1000&q=80'
+      }
+    ];
+
+    console.log('Downloading high-res images and seeding products...');
+    
+    for (let data of productData) {
+      try {
+        const imageBuffer = await downloadImage(data.imageUrl);
+        const product = new Product({
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          category: data.category,
+          quantity: data.quantity,
+          shipping: data.shipping
+        });
+        
+        product.photo.data = imageBuffer;
+        product.photo.contentType = 'image/jpeg';
+        
+        await product.save();
+        console.log(`Saved product with image: ${product.name}`);
+      } catch (err) {
+        console.error(`Error saving product ${data.name}:`, err.message);
+      }
+    }
+    
+    console.log('Database seeding completely finished!');
+    process.exit(0);
+
+  } catch (err) {
+    console.error('Seeding error:', err);
+    process.exit(1);
+  }
+};
+
+seedDB();
