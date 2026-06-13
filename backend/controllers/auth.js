@@ -40,7 +40,7 @@ exports.signin = async (req, res) => {
     }
 
     // Generate a signed token with user ID and secret
-    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET || 'yoursecretkey_changethisinproduction');
 
     // Persist the token as 't' in cookie with expiry date
     res.cookie('t', token, { expire: new Date() + 9999 });
@@ -61,7 +61,7 @@ exports.signout = (req, res) => {
 };
 
 exports.requireSignin = expressjwt({
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET || 'yoursecretkey_changethisinproduction',
   algorithms: ['HS256'],
   userProperty: 'auth',
 });
