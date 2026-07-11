@@ -145,6 +145,51 @@ const seedDB = async () => {
         quantity: 60,
         shipping: true,
         imageUrl: 'https://images.unsplash.com/photo-1506506200949-0e2ff1018330?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Ultra-Light Running Shoes',
+        description: 'Highly breathable mesh upper running shoes with responsive cushioning for maximum energy return.',
+        price: 85,
+        category: catClothing._id,
+        quantity: 80,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Smartwatch Series 8 Pro',
+        description: 'Stay connected in style. Heart rate tracking, blood oxygen levels, and multi-sport mode tracking with a 7-day battery life.',
+        price: 249,
+        category: catElectronics._id,
+        quantity: 40,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Premium Leather Backpack',
+        description: 'Handcrafted top-grain leather backpack featuring a padded laptop compartment and heavy-duty steel zippers.',
+        price: 120,
+        category: catClothing._id,
+        quantity: 25,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Organic Dark Roast Coffee Beans',
+        description: '100% Arabica whole bean coffee. Rich body with chocolatey notes, ethically sourced from single-origin farms.',
+        price: 18,
+        category: catHome._id,
+        quantity: 200,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1000&q=80'
+      },
+      {
+        name: 'Ergonomic Office Chair',
+        description: 'High-back office chair with adjustable lumbar support, 3D armrests, and breathable mesh backrest for ultimate comfort.',
+        price: 189,
+        category: catHome._id,
+        quantity: 15,
+        shipping: true,
+        imageUrl: 'https://images.unsplash.com/photo-1505797149-43b0069ec26b?auto=format&fit=crop&w=1000&q=80'
       }
     ];
 

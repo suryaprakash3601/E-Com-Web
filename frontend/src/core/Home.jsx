@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Layout from './Layout';
-import { getProducts } from './apiCore.js';
+import { getProducts, getCategories } from './apiCore.js';
 import Card from './Card.jsx';
 import Search from './Search';
 import Copyright from './Copyright.jsx';
-import { Box, Container, Typography, Button, Grid, Divider } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Container, Typography, Button, Grid, Divider, Paper } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
   const [productsBySell, setProductsBySell] = useState([]);
   const [productsByArrival, setProductsByArrival] = useState([]);
   const [error, setError] = useState([]);
@@ -26,9 +28,17 @@ const Home = () => {
     });
   };
 
+  const loadCategories = () => {
+    getCategories().then((data) => {
+      if (data.error) setError(data.error);
+      else setCategories(data);
+    });
+  };
+
   useEffect(() => {
     loadProductsByArrival();
     loadProductsBySell();
+    loadCategories();
   }, []);
 
   return (
@@ -36,6 +46,65 @@ const Home = () => {
       title="Welcome to ShopZone"
       description="Premium products, delivered fast"
     >
+      {/* Flipkart-Style Category Quick Navigation */}
+      {categories.length > 0 && (
+        <Paper
+          elevation={0}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: { xs: 2.5, sm: 4, md: 6 },
+            py: 2.5,
+            px: 3,
+            mb: 4,
+            borderRadius: 3,
+            border: '1px solid',
+            borderColor: 'grey.200',
+            bgcolor: 'background.paper',
+            overflowX: 'auto',
+            whiteSpace: 'nowrap',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': { display: 'none' },
+          }}
+        >
+          {categories.map((c) => {
+            let icon = '📦';
+            const name = c.name.toLowerCase();
+            if (name.includes('electron')) icon = '💻';
+            else if (name.includes('book')) icon = '📚';
+            else if (name.includes('cloth')) icon = '👕';
+            else if (name.includes('home') || name.includes('kitchen')) icon = '🏠';
+            else if (name.includes('shoe') || name.includes('foot')) icon = '👟';
+            
+            return (
+              <Box
+                key={c._id}
+                onClick={() => navigate('/shop', { state: { category: c._id } })}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    transform: 'translateY(-4px) scale(1.05)',
+                    color: 'primary.main',
+                  },
+                  minWidth: 80,
+                }}
+              >
+                <Typography variant="h4" sx={{ mb: 0.5 }}>
+                  {icon}
+                </Typography>
+                <Typography variant="body2" fontWeight={700} color="text.secondary">
+                  {c.name}
+                </Typography>
+              </Box>
+            );
+          })}
+        </Paper>
+      )}
+
       {/* Compact promo strip */}
       <Box
         sx={{

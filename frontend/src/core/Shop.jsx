@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Layout from './Layout';
 import Button from '@mui/material/Button';
 import Card from './Card.jsx';
@@ -29,6 +30,7 @@ const GradientButton = styled(Button)(({ theme }) => ({
 }));
 
 const Shop = () => {
+  const location = useLocation();
   const [myFilters, setMyFilters] = useState({
     filters: { category: [], price: [] },
   });
@@ -93,9 +95,14 @@ const Shop = () => {
 
   useEffect(() => {
     init();
-    loadFilteredResults(myFilters.filters);
+    const initialCategory = location.state?.category ? [location.state.category] : [];
+    const newFilters = {
+      filters: { category: initialCategory, price: [] }
+    };
+    setMyFilters(newFilters);
+    loadFilteredResults(newFilters.filters);
     // eslint-disable-next-line
-  }, []);
+  }, [location.state]);
 
   const handleFilters = (filters, filterBy) => {
     const newFilters = { ...myFilters };
@@ -136,6 +143,7 @@ const Shop = () => {
             <CategoriesFilter
               categories={categories}
               handleFilters={(filters) => handleFilters(filters, 'category')}
+              initialChecked={myFilters.filters.category}
             />
             <PriceRangeFilter
               prices={prices}

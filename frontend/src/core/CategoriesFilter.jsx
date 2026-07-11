@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Chip, Paper } from '@mui/material';
 
-const CategoriesFilter = ({ categories, handleFilters }) => {
-  const [checked, setChecked] = useState([]);
+const CategoriesFilter = ({ categories, handleFilters, initialChecked = [] }) => {
+  const [checked, setChecked] = useState(initialChecked);
+
+  useEffect(() => {
+    setChecked(initialChecked);
+  }, [initialChecked]);
 
   const handleToggle = (categoryId) => {
     const currentIndex = checked.indexOf(categoryId);
