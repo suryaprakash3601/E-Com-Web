@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import ShowImage from './ShowImage';
 import moment from 'moment';
 
-// MUI v5 imports
+// MUI imports
 import Button from '@mui/material/Button';
 import CardM from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -17,7 +17,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import IconButton from '@mui/material/IconButton';
+import StarIcon from '@mui/icons-material/Star';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import { addItem, updateItem, removeItem } from './cartHelpers';
@@ -47,9 +47,9 @@ const Card = ({
           href={`/product/${product._id}`}
           variant='contained'
           color='primary'
-          sx={{ mr: 1 }}
+          sx={{ mr: 1, flexGrow: 1 }}
         >
-          View Product
+          View Item
         </Button>
       )
     );
@@ -59,7 +59,7 @@ const Card = ({
     addItem(product, () => {
       setSnackbarMessage(`${product.name} added to cart!`);
       setOpenSnackbar(true);
-      setRun(!run); // This will trigger parent components to update
+      setRun(!run); // Trigger updates
     });
   };
 
@@ -81,12 +81,13 @@ const Card = ({
       showAddToCartButton && (
         <Button
           onClick={addToCart}
-          variant='outlined'
+          variant='contained'
           color='secondary'
           startIcon={<ShoppingCartIcon />}
           disabled={product.quantity < 1}
+          sx={{ flexGrow: 1, color: 'white', fontWeight: 700 }}
         >
-          Add to cart
+          Add to Cart
         </Button>
       )
     );
@@ -94,31 +95,31 @@ const Card = ({
 
   const showStock = (quantity) => {
     return quantity > 0 ? (
-      <Chip label='In Stock' color='success' size='small' sx={{ mb: 1 }} />
+      <Chip label='In Stock' color='success' size='small' sx={{ mb: 1, fontWeight: 600 }} />
     ) : (
-      <Chip label='Out of Stock' color='error' size='small' sx={{ mb: 1 }} />
+      <Chip label='Out of Stock' color='error' size='small' sx={{ mb: 1, fontWeight: 600 }} />
     );
   };
 
   const handleChange = (productId) => (event) => {
+    const val = event.target.value < 1 ? 1 : event.target.value;
+    setCount(val);
+    updateItem(productId, val);
     setRun(!run);
-    setCount(event.target.value < 1 ? 1 : event.target.value);
-    if (event.target.value >= 1) {
-      updateItem(productId, event.target.value);
-      setSnackbarMessage('Quantity updated!');
-      setOpenSnackbar(true);
-    }
+    setSnackbarMessage('Quantity updated!');
+    setOpenSnackbar(true);
   };
 
   const showCartUpdateOptions = (cartUpdate) => {
     return (
       cartUpdate && (
         <Box sx={{ mt: 2 }}>
-          <FormControl fullWidth>
+          <FormControl fullWidth size="small">
             <InputLabel>Adjust Quantity</InputLabel>
             <TextField
               type='number'
               variant='outlined'
+              size="small"
               value={count}
               onChange={handleChange(product._id)}
               sx={{ mt: 1 }}
@@ -143,13 +144,17 @@ const Card = ({
           variant='contained'
           color='error'
           startIcon={<DeleteIcon />}
-          sx={{ mt: 1, width: '100%' }}
+          sx={{ mt: 1.5, width: '100%', borderRadius: 2 }}
         >
-          Remove Product
+          Remove
         </Button>
       )
     );
   };
+
+  // Generate a deterministic rating/review count for visuals
+  const seedRating = 4.0 + ((product.name.length % 10) / 10);
+  const reviewCount = (product.price.toString().charCodeAt(0) * 3) % 200 + 15;
 
   return (
     <>
@@ -158,19 +163,65 @@ const Card = ({
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          transition: 'transform 0.3s',
+          position: 'relative',
+          transition: 'all 0.3s',
           '&:hover': {
-            transform: 'scale(1.02)',
-            boxShadow: 3,
+            transform: 'translateY(-6px)',
+            boxShadow: '0 12px 24px -8px rgba(0,0,0,0.15)',
           },
         }}
       >
         {shouldRedirect(redirect)}
+
+        {/* Dynamic absolute badges on top of card */}
+        {product.quantity <= 15 && product.quantity > 0 && (
+          <Chip
+            label={`Only ${product.quantity} Left!`}
+            size="small"
+            color="error"
+            sx={{ position: 'absolute', top: 12, left: 12, zIndex: 1, fontWeight: 700 }}
+          />
+        )}
+        {product.price >= 150 && product.quantity > 15 && (
+          <Chip
+            label="Free Delivery"
+            size="small"
+            color="info"
+            sx={{ position: 'absolute', top: 12, left: 12, zIndex: 1, fontWeight: 700 }}
+          />
+        )}
+        {product.quantity > 15 && product.price < 150 && (product.price % 3 === 0) && (
+          <Chip
+            label="Best Seller"
+            size="small"
+            color="warning"
+            sx={{ position: 'absolute', top: 12, left: 12, zIndex: 1, fontWeight: 700, color: 'white' }}
+          />
+        )}
+
         <ShowImage item={product} url='product' />
-        <CardContent sx={{ flexGrow: 1 }}>
-          <Typography gutterBottom variant='h6' component='h2' noWrap>
+
+        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', p: 2.5 }}>
+          <Typography gutterBottom variant='h6' component='h2' fontWeight={700} noWrap sx={{ mb: 0.5 }}>
             {product.name}
           </Typography>
+
+          {/* Flipkart/Amazon ratings style */}
+          <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mb: 1.5 }}>
+            <Stack direction="row" sx={{ color: '#ff9900' }}>
+              <StarIcon sx={{ fontSize: 16 }} />
+              <StarIcon sx={{ fontSize: 16 }} />
+              <StarIcon sx={{ fontSize: 16 }} />
+              <StarIcon sx={{ fontSize: 16 }} />
+              <StarIcon sx={{ fontSize: 16, opacity: seedRating >= 4.5 ? 1 : 0.4 }} />
+            </Stack>
+            <Typography variant="caption" fontWeight={700} color="text.secondary">
+              {seedRating.toFixed(1)}
+            </Typography>
+            <Typography variant="caption" color="text.disabled">
+              ({reviewCount} reviews)
+            </Typography>
+          </Stack>
 
           <Typography
             variant='body2'
@@ -178,45 +229,37 @@ const Card = ({
             sx={{
               mb: 2,
               display: '-webkit-box',
-              WebkitLineClamp: 3,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
+              lineHeight: 1.6,
+              fontSize: '0.825rem'
             }}
           >
             {product.description}
           </Typography>
 
-          <Stack direction='row' spacing={1} sx={{ mb: 1 }}>
-            <Typography variant='body1' fontWeight='bold'>
-              ${product.price}
+          <Stack direction='row' spacing={1} alignItems="center" sx={{ mb: 1.5, mt: 'auto' }}>
+            <Typography variant='h6' fontWeight='800' color="primary.main">
+              ${product.price.toFixed(2)}
             </Typography>
             {showStock(product.quantity)}
           </Stack>
 
-          <Typography
-            variant='caption'
-            color='text.secondary'
-            display='block'
-            sx={{ mb: 1 }}
-          >
-            Category: {product.category?.name}
-          </Typography>
-
-          <Typography
-            variant='caption'
-            color='text.secondary'
-            display='block'
-            sx={{ mb: 2 }}
-          >
-            Added {moment(product.createdAt).fromNow()}
-          </Typography>
+          <Stack direction='row' justifyContent="space-between" sx={{ mb: 2 }}>
+            <Typography variant='caption' color='text.secondary'>
+              Category: <strong>{product.category?.name || 'General'}</strong>
+            </Typography>
+            <Typography variant='caption' color='text.secondary'>
+              {moment(product.createdAt).fromNow()}
+            </Typography>
+          </Stack>
 
           <Box
             sx={{
               display: 'flex',
-              flexWrap: 'wrap',
               gap: 1,
-              mt: 'auto',
+              width: '100%'
             }}
           >
             {showViewButton(showViewProductButton)}
