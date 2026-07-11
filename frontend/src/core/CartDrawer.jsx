@@ -17,6 +17,16 @@ const CartDrawer = ({ open, onClose }) => {
     }
   }, [open, run]);
 
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      setItems(getCart());
+    };
+    window.addEventListener('cartUpdate', handleCartUpdate);
+    return () => {
+      window.removeEventListener('cartUpdate', handleCartUpdate);
+    };
+  }, []);
+
   return (
     <Drawer
       anchor="right"

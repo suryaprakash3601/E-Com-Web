@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { signout, isAuthenticated } from '../auth';
 import { itemTotal } from './cartHelpers';
@@ -39,7 +39,20 @@ const MaterialAppBar = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileAnchorEl, setMobileAnchorEl] = React.useState(null);
   const [cartOpen, setCartOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(itemTotal());
   const currentPath = location.pathname;
+
+  useEffect(() => {
+    const handleCartUpdate = () => {
+      setCartCount(itemTotal());
+    };
+    window.addEventListener('cartUpdate', handleCartUpdate);
+    // Initial sync
+    setCartCount(itemTotal());
+    return () => {
+      window.removeEventListener('cartUpdate', handleCartUpdate);
+    };
+  }, []);
 
   const isMobileMenuOpen = Boolean(mobileAnchorEl);
 
@@ -75,7 +88,7 @@ const MaterialAppBar = () => {
       action: toggleCart,
       label: 'Cart',
       icon: (
-        <Badge badgeContent={itemTotal()} color='error'>
+        <Badge badgeContent={cartCount} color='error'>
           <ShoppingCart />
         </Badge>
       ),
@@ -252,7 +265,7 @@ const MaterialAppBar = () => {
               aria-label='open menu'
               onClick={handleMobileMenuOpen}
             >
-              <Badge badgeContent={itemTotal()} color='error'>
+              <Badge badgeContent={cartCount} color='error'>
                  <MenuIcon />
               </Badge>
             </IconButton>

@@ -106,7 +106,7 @@ const seedDB = async () => {
         imageUrl: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=1000&q=80'
       },
       {
-        name: 'Wireless Noise-Cancelling Earbuds',
+        name: 'Wireless ANC Earbuds',
         description: 'True wireless earbuds with smart active noise cancellation, water resistance, and up to 30 hours of battery life with charging case.',
         price: 129,
         category: catElectronics._id,

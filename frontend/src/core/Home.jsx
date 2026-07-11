@@ -296,7 +296,7 @@ const Home = () => {
           </Box>
           <Grid container spacing={3}>
             {productsByArrival.map((product, i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i}>
                 <Card product={product} />
               </Grid>
             ))}
@@ -317,7 +317,7 @@ const Home = () => {
           </Box>
           <Grid container spacing={3}>
             {productsBySell.map((product, i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i}>
                 <Card product={product} />
               </Grid>
             ))}

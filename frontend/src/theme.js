@@ -3,19 +3,19 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#0f172a', // Sleek Dark Slate
-      light: '#334155',
-      dark: '#020617',
+      main: '#4f46e5', // Vibrant Royal Indigo
+      light: '#6366f1',
+      dark: '#3730a3',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#ff9900', // Amazon-style Amber Gold
+      main: '#ff9900', // Vibrant Golden Amber
       light: '#ffb84d',
-      dark: '#cc7a00',
+      dark: '#d97706',
       contrastText: '#ffffff',
     },
     background: {
-      default: '#f1f5f9', // Soft slate grey background
+      default: '#f8fafc', // Very soft slate blue-tinted white
       paper: '#ffffff',
     },
     text: {
@@ -34,7 +34,7 @@ const theme = createTheme({
     button: { textTransform: 'none', fontWeight: 700, letterSpacing: '0.02em' },
   },
   shape: {
-    borderRadius: 16, // Softer, modern rounded corners
+    borderRadius: 16,
   },
   components: {
     MuiButton: {
@@ -53,10 +53,10 @@ const theme = createTheme({
         sizeSmall: { padding: '5px 14px', fontSize: '0.8125rem' },
         sizeLarge: { padding: '12px 28px', fontSize: '0.9375rem' },
         containedPrimary: {
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+          background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
           '&:hover': {
-            background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
-            boxShadow: '0 8px 20px -8px rgba(15, 23, 42, 0.4)',
+            background: 'linear-gradient(135deg, #3730a3 0%, #6d28d9 100%)',
+            boxShadow: '0 8px 20px -8px rgba(79, 70, 229, 0.4)',
           },
         },
         containedSecondary: {

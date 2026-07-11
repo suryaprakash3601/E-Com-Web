@@ -534,16 +534,44 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
             color: 'success.dark',
             mb: 3,
             boxShadow: '0 8px 24px -4px rgba(46, 125, 50, 0.25)',
+            animation: 'pulseCheck 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) both',
+            '@keyframes pulseCheck': {
+              '0%': { transform: 'scale(0.3)', opacity: 0 },
+              '70%': { transform: 'scale(1.15)' },
+              '100%': { transform: 'scale(1)', opacity: 1 }
+            }
           }}
         >
           <CheckCircleOutlineIcon sx={{ fontSize: 44 }} />
         </Box>
 
-        <Typography variant="h4" fontWeight={800} gutterBottom sx={{ color: 'success.dark' }}>
+        <Typography
+          variant="h4"
+          fontWeight={800}
+          gutterBottom
+          sx={{
+            color: 'success.dark',
+            animation: 'fadeSlideUp 0.6s ease-out 0.25s both',
+            '@keyframes fadeSlideUp': {
+              '0%': { transform: 'translateY(25px)', opacity: 0 },
+              '100%': { transform: 'translateY(0)', opacity: 1 }
+            }
+          }}
+        >
           🎉 Thank You for Your Order! 🙏💖
         </Typography>
         
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 450, mx: 'auto', lineHeight: 1.6 }}>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{
+            mb: 4,
+            maxWidth: 450,
+            mx: 'auto',
+            lineHeight: 1.6,
+            animation: 'fadeSlideUp 0.6s ease-out 0.35s both',
+          }}
+        >
           Your payment was processed successfully. 🚀 Your cart has been emptied, and our dispatch team is already preparing your package! 📦💨
         </Typography>
 
@@ -560,6 +588,7 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
               mx: 'auto',
               mb: 4,
               boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
+              animation: 'fadeSlideUp 0.6s ease-out 0.45s both',
             }}
           >
             <Typography variant="subtitle1" fontWeight={800} sx={{ mb: 2, borderBottom: '1px solid', borderColor: 'divider', pb: 1 }}>
@@ -612,7 +641,8 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
             px: 4,
             fontWeight: 800,
             borderRadius: 3,
-            boxShadow: '0 8px 24px -6px rgba(15,23,42,0.3)',
+            boxShadow: '0 8px 24px -6px rgba(79,70,229,0.3)',
+            animation: 'fadeSlideUp 0.6s ease-out 0.55s both',
           }}
         >
           Continue Shopping
