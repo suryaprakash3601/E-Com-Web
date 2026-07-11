@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Layout from './Layout';
 import { getCart } from './cartHelpers.js';
-import Card from './Card.jsx';
+import CartItem from './CartItem.jsx';
 import Checkout from './Checkout';
 import Copyright from './Copyright.jsx';
 import {
@@ -26,17 +26,14 @@ const Cart = () => {
 
   const showItems = (items) => (
     <Stack spacing={3}>
-      <Typography variant='h5' textAlign='center' gutterBottom>
+      <Typography variant='h5' gutterBottom>
         Your Cart ({items.length} {items.length === 1 ? 'Item' : 'Items'})
       </Typography>
       <Divider />
       {items.map((product, i) => (
         <Box key={i}>
-          <Card
+          <CartItem
             product={product}
-            showAddToCartButton={false}
-            cartUpdate={true}
-            showRemoveProductButton={true}
             setRun={setRun}
             run={run}
           />
@@ -69,16 +66,16 @@ const Cart = () => {
       description='Manage your cart items. Add remove checkout or continue shopping.'
     >
       {items.length > 0 ? (
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           {/* Cart Items */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
               {showItems(items)}
             </Paper>
           </Grid>
 
           {/* Order Summary */}
-          <Grid size={{ xs: 12, md: 9 }}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Paper
               elevation={2}
               sx={{ p: 3, position: { md: 'sticky' }, top: { md: 16 } }}

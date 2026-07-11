@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate, Link as RouterLink } from 'react-router-dom';
+import { Navigate, Link as RouterLink, useLocation } from 'react-router-dom';
 import Menu from '../core/Menu.jsx';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -17,6 +17,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Copyright from '../core/Copyright.jsx';
 import { signin, authenticate, isAuthenticated } from '../auth/index.js';
+import { mergeCartAfterLogin } from '../core/cartHelpers';
 
 export default function Signin() {
   const [values, setValues] = useState({
@@ -31,6 +32,8 @@ export default function Signin() {
   const { email, password, loading, error, redirectToReferrer, rememberMe } = values;
   const authData = isAuthenticated();
   const user = authData && authData.user;
+  const location = useLocation();
+  const from = location.state?.from || null;
 
   const handleChange = (name) => (event) => {
     const value = name === 'rememberMe' ? event.target.checked : event.target.value;
@@ -46,6 +49,9 @@ export default function Signin() {
         setValues({ ...values, error: data.error, loading: false });
       } else {
         authenticate(data, () => {
+          if (data && data.user && data.user._id) {
+            mergeCartAfterLogin(data.user._id);
+          }
           setValues({ ...values, redirectToReferrer: true });
         });
       }
@@ -71,6 +77,9 @@ export default function Signin() {
       if (user && user.role === 1) {
         return <Navigate to='/admin/dashboard' />;
       } else {
+        if (from) {
+          return <Navigate to={from} />;
+        }
         return <Navigate to='/user/dashboard' />;
       }
     }

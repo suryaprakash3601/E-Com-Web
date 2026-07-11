@@ -128,7 +128,7 @@ const Orders = () => {
                           <strong>Amount:</strong> ${o.amount}
                         </Typography>
                         <Typography variant='body1'>
-                          <strong>Ordered by:</strong> {o.user.name}
+                          <strong>Ordered by:</strong> {o.user?.name || 'Deleted User'}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={6}>

@@ -522,6 +522,7 @@ const Checkout = ({ products, setRun = (f) => f, run = undefined }) => {
         <Button
           component={Link}
           to="/signin"
+          state={{ from: '/cart' }}
           variant="contained"
           fullWidth
           size="large"

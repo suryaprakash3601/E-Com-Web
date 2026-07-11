@@ -240,7 +240,7 @@ const MaterialAppBar = () => {
                 color: 'white',
               }}
             >
-              BRAND
+              ShopZone
             </Typography>
           </Box>
 

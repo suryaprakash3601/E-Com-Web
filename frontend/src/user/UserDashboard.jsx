@@ -91,18 +91,35 @@ const Dashboard = () => {
     </Card>
   );
 
-  const PurchaseHistoryCard = () => (
-    <Card elevation={0} sx={{ borderRadius: 4, border: '1px solid', borderColor: 'divider' }}>
-      <CardHeader
-        title={
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <ShoppingBagOutlinedIcon color="primary" />
-            <Typography variant='h6' fontWeight="bold">Recent Orders</Typography>
-          </Box>
-        }
-        sx={{ bgcolor: 'grey.50', borderBottom: '1px solid', borderColor: 'divider', py: 2 }}
-      />
-      <CardContent sx={{ p: { xs: 2, md: 4 } }}>
+  const PurchaseHistoryCard = () => {
+    const getStatusColor = (status) => {
+      switch (status) {
+        case 'Delivered':
+          return 'success';
+        case 'Shipped':
+          return 'primary';
+        case 'Processing':
+          return 'warning';
+        case 'Cancelled':
+          return 'error';
+        case 'Not processed':
+        default:
+          return 'default';
+      }
+    };
+
+    return (
+      <Card elevation={0} sx={{ borderRadius: 4, border: '1px solid', borderColor: 'divider' }}>
+        <CardHeader
+          title={
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <ShoppingBagOutlinedIcon color="primary" />
+              <Typography variant='h6' fontWeight="bold">Recent Orders</Typography>
+            </Box>
+          }
+          sx={{ bgcolor: 'grey.50', borderBottom: '1px solid', borderColor: 'divider', py: 2 }}
+        />
+        <CardContent sx={{ p: { xs: 2, md: 4 } }}>
         {loading ? (
           <Typography>Loading history...</Typography>
         ) : history.length === 0 ? (
@@ -152,7 +169,7 @@ const Dashboard = () => {
                           <Typography variant='h6' color='text.primary' fontWeight="700">
                             ${p.price.toFixed(2)}
                           </Typography>
-                          <Chip label="Processing" size="small" color="info" sx={{ mt: 1 }} />
+                          <Chip label={h.status} size="small" color={getStatusColor(h.status)} sx={{ mt: 1 }} />
                         </Grid>
                       </Grid>
                     </Paper>
@@ -165,7 +182,8 @@ const Dashboard = () => {
         )}
       </CardContent>
     </Card>
-  );
+    );
+  };
 
   return (
     <Layout title='My Dashboard' description={`Manage your account and view orders.`}>

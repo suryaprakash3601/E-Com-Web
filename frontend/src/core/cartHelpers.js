@@ -1,45 +1,86 @@
-export const addItem = (item = [], count = 0, next = (f) => f) => {
-  let cart = [];
+const getUserId = () => {
   if (typeof window !== 'undefined') {
-    if (localStorage.getItem('cart')) {
-      cart = JSON.parse(localStorage.getItem('cart'));
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      try {
+        const auth = JSON.parse(jwt);
+        if (auth && auth.user && auth.user._id) {
+          return auth.user._id;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }
+  return null;
+};
+
+export const getCartKey = () => {
+  const userId = getUserId();
+  return userId ? `cart_${userId}` : 'cart';
+};
+
+export const mergeCartAfterLogin = (userId) => {
+  if (typeof window !== 'undefined') {
+    const guestCart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (guestCart.length > 0) {
+      const userCartKey = `cart_${userId}`;
+      let userCart = JSON.parse(localStorage.getItem(userCartKey)) || [];
+
+      // Merge items, matching by product id
+      let mergedCart = [...userCart, ...guestCart];
+      mergedCart = Array.from(new Set(mergedCart.map((p) => p._id))).map((id) => {
+        return mergedCart.find((p) => p._id === id);
+      });
+
+      localStorage.setItem(userCartKey, JSON.stringify(mergedCart));
+      localStorage.removeItem('cart');
+    }
+  }
+};
+
+export const addItem = (item = {}, count = 0, next = (f) => f) => {
+  if (typeof count === 'function') {
+    next = count;
+    count = 0;
+  }
+
+  let cart = [];
+  const key = getCartKey();
+  if (typeof window !== 'undefined') {
+    if (localStorage.getItem(key)) {
+      cart = JSON.parse(localStorage.getItem(key));
     }
     cart.push({
       ...item,
       count: 1,
     });
 
-    // remove duplicates
-    // build an Array from new Set and turn it back into array using Array.from
-    // so that later we can re-map it
-    // new set will only allow unique values in it
-    // so pass the ids of each object/product
-    // If the loop tries to add the same value again, it'll get ignored
-    // ...with the array of ids we got on when first map() was used
-    // run map() on it again and return the actual product from the cart
-
+    // Remove duplicates
     cart = Array.from(new Set(cart.map((p) => p._id))).map((id) => {
       return cart.find((p) => p._id === id);
     });
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem(key, JSON.stringify(cart));
     next();
   }
 };
 
 export const itemTotal = () => {
+  const key = getCartKey();
   if (typeof window !== 'undefined') {
-    if (localStorage.getItem('cart')) {
-      return JSON.parse(localStorage.getItem('cart')).length;
+    if (localStorage.getItem(key)) {
+      return JSON.parse(localStorage.getItem(key)).length;
     }
   }
   return 0;
 };
 
 export const getCart = () => {
+  const key = getCartKey();
   if (typeof window !== 'undefined') {
-    if (localStorage.getItem('cart')) {
-      return JSON.parse(localStorage.getItem('cart'));
+    if (localStorage.getItem(key)) {
+      return JSON.parse(localStorage.getItem(key));
     }
   }
   return [];
@@ -47,42 +88,45 @@ export const getCart = () => {
 
 export const updateItem = (productId, count) => {
   let cart = [];
+  const key = getCartKey();
   if (typeof window !== 'undefined') {
-    if (localStorage.getItem('cart')) {
-      cart = JSON.parse(localStorage.getItem('cart'));
+    if (localStorage.getItem(key)) {
+      cart = JSON.parse(localStorage.getItem(key));
     }
 
-    cart.map((product, i) => {
+    cart = cart.map((product) => {
       if (product._id === productId) {
-        cart[i].count = count;
+        return {
+          ...product,
+          count: parseInt(count, 10),
+        };
       }
+      return product;
     });
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem(key, JSON.stringify(cart));
   }
 };
 
 export const removeItem = (productId) => {
   let cart = [];
+  const key = getCartKey();
   if (typeof window !== 'undefined') {
-    if (localStorage.getItem('cart')) {
-      cart = JSON.parse(localStorage.getItem('cart'));
+    if (localStorage.getItem(key)) {
+      cart = JSON.parse(localStorage.getItem(key));
     }
 
-    cart.map((product, i) => {
-      if (product._id === productId) {
-        cart.splice(i, 1);
-      }
-    });
+    cart = cart.filter((product) => product._id !== productId);
 
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem(key, JSON.stringify(cart));
   }
   return cart;
 };
 
 export const emptyCart = (next) => {
+  const key = getCartKey();
   if (typeof window !== 'undefined') {
-    localStorage.removeItem('cart');
+    localStorage.removeItem(key);
     next();
   }
 };

@@ -4,7 +4,7 @@ import { Drawer, Box, Typography, Divider, IconButton, Button, Stack, useTheme }
 import CloseIcon from '@mui/icons-material/Close';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { getCart } from './cartHelpers.js';
-import Card from './Card.jsx';
+import CartItem from './CartItem.jsx';
 
 const CartDrawer = ({ open, onClose }) => {
   const theme = useTheme();
@@ -44,11 +44,8 @@ const CartDrawer = ({ open, onClose }) => {
           <Stack spacing={3}>
             {items.map((product, i) => (
               <Box key={i} sx={{ position: 'relative' }}>
-                <Card
+                <CartItem
                   product={product}
-                  showAddToCartButton={false}
-                  cartUpdate={true}
-                  showRemoveProductButton={true}
                   setRun={setRun}
                   run={run}
                 />
