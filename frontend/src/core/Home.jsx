@@ -133,6 +133,7 @@ const Home = () => {
                   alignItems: 'center',
                   cursor: 'pointer',
                   transition: 'all 0.25s',
+                  flexShrink: 0,
                   '&:hover': {
                     transform: 'translateY(-6px)',
                     '& .category-icon-bg': {
@@ -165,7 +166,23 @@ const Home = () => {
                 >
                   {icon}
                 </Box>
-                <Typography className="category-name" variant="caption" fontWeight={700} color="text.secondary" sx={{ fontSize: '0.8rem', transition: 'color 0.2s' }}>
+                <Typography
+                  className="category-name"
+                  variant="caption"
+                  fontWeight={700}
+                  color="text.secondary"
+                  sx={{
+                    fontSize: '0.8rem',
+                    transition: 'color 0.2s',
+                    whiteSpace: 'normal',
+                    maxWidth: 100,
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                    lineHeight: 1.2,
+                  }}
+                >
                   {c.name}
                 </Typography>
               </Box>
