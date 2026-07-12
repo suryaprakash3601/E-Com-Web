@@ -47,7 +47,7 @@ const Card = ({
           href={`/product/${product._id}`}
           variant='contained'
           color='primary'
-          sx={{ mr: 1, flexGrow: 1 }}
+          sx={{ flexGrow: 1, width: { xs: '100%', sm: 'auto' } }}
         >
           View Item
         </Button>
@@ -85,7 +85,7 @@ const Card = ({
           color='secondary'
           startIcon={<ShoppingCartIcon />}
           disabled={product.quantity < 1}
-          sx={{ flexGrow: 1, color: 'white', fontWeight: 700 }}
+          sx={{ flexGrow: 1, color: 'white', fontWeight: 700, width: { xs: '100%', sm: 'auto' } }}
         >
           Add to Cart
         </Button>
@@ -246,7 +246,13 @@ const Card = ({
             {showStock(product.quantity)}
           </Stack>
 
-          <Stack direction='row' justifyContent="space-between" sx={{ mb: 2 }}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            justifyContent="space-between"
+            alignItems={{ xs: 'flex-start', sm: 'center' }}
+            spacing={{ xs: 0.5, sm: 0 }}
+            sx={{ mb: 2 }}
+          >
             <Typography variant='caption' color='text.secondary'>
               Category: <strong>{product.category?.name || 'General'}</strong>
             </Typography>
@@ -258,6 +264,7 @@ const Card = ({
           <Box
             sx={{
               display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
               gap: 1,
               width: '100%'
             }}

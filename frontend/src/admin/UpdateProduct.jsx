@@ -132,7 +132,7 @@ const UpdateProduct = () => {
       <Grid container spacing={2}>
         <AdminSidebar />
 
-        <Grid size={{ xs: 12, md: 9 }}>
+        <Grid item xs={12} md={9}>
           <Card elevation={3}>
             <CardHeader title='Edit Product Details' />
             <Divider />

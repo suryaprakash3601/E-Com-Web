@@ -68,14 +68,14 @@ const Cart = () => {
       {items.length > 0 ? (
         <Grid container spacing={3}>
           {/* Cart Items */}
-          <Grid size={{ xs: 12, md: 8 }}>
+          <Grid item xs={12} md={8}>
             <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
               {showItems(items)}
             </Paper>
           </Grid>
 
           {/* Order Summary */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid item xs={12} md={4}>
             <Paper
               elevation={2}
               sx={{ p: 3, position: { md: 'sticky' }, top: { md: 16 } }}

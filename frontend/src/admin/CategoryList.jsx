@@ -43,7 +43,7 @@ const CategoryList = () => {
         <AdminSidebar />
 
         {/* MAIN CONTENT */}
-        <Grid size={{ xs: 12, md: 9 }}>
+        <Grid item xs={12} md={9}>
           <Card elevation={3}>
             <CardHeader
               title='Category List'

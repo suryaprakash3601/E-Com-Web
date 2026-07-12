@@ -102,8 +102,7 @@ const CartItem = ({ product, setRun = (f) => f, run = undefined }) => {
         <Typography
           variant="subtitle1"
           fontWeight={700}
-          noWrap
-          sx={{ mb: 0.5, color: 'text.primary' }}
+          sx={{ mb: 0.5, color: 'text.primary', wordBreak: 'break-word' }}
         >
           {product.name}
         </Typography>
@@ -148,7 +147,7 @@ const CartItem = ({ product, setRun = (f) => f, run = undefined }) => {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        spacing={2.5}
+        spacing={{ xs: 1, sm: 2.5 }}
         sx={{ width: { xs: '100%', sm: 'auto' }, borderTop: { xs: '1px solid', sm: 'none' }, pt: { xs: 1.5, sm: 0 }, borderColor: 'grey.100' }}
       >
         {/* Quantity adjustment controls */}

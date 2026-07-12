@@ -134,7 +134,7 @@ const Profile = () => {
         <UserSidebar userId={_id} />
 
         {/* MAIN CONTENT */}
-        <Grid size={{ xs: 12, md: 9 }}>
+        <Grid item xs={12} md={9}>
           {profileUpdate(name, email, password)}
           {redirectUser(success)}
         </Grid>

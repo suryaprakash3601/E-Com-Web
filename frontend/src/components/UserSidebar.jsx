@@ -24,7 +24,7 @@ const UserSidebar = ({ userId }) => {
   ];
 
   return (
-    <Grid size={{ xs: 12, md: 3 }}>
+    <Grid item xs={12} md={3}>
       <Card elevation={3}>
         <CardHeader
           title='User Menu'
